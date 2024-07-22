@@ -27,7 +27,7 @@ The project aims to develop a multiplayer card game platform where users can reg
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/ruandsx/truco-js.git
+   git clone https://github.com/ruandsx/trucojs.git
    ```
 
 2. Configure environment variables:
