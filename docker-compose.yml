@@ -1,0 +1,70 @@
+services:
+  dragonfly:
+    container_name: dragonfly
+    image: "docker.dragonflydb.io/dragonflydb/dragonfly"
+    ulimits:
+      memlock: -1
+    ports:
+      - "6379:6379"
+    volumes:
+      - .dragonflydata:/data
+    networks:
+      - intra-net
+
+  server:
+    container_name: server
+    build:
+      target: prod
+      context: ./server
+    environment:
+      - NODE_ENV=production
+      - APP_HOST=${APP_HOST}
+      - APP_PORT=${APP_PORT}
+      - APP_CORS_ALLOWED_ORIGINS=${APP_CORS_ALLOWED_ORIGINS}
+      - APP_CORS_ALLOWED_HEADERS=${APP_CORS_ALLOWED_HEADERS}
+      - REDIS_HOST=dragonfly
+      - REDIS_PORT=6379
+      - CLIENT_PORT=${CLIENT_PORT}
+      - CLIENT_ORIGIN=${CLIENT_ORIGIN}
+    volumes:
+      - ./server/src:/app/src
+      - /app/node_modules
+    ports:
+      - 3333:3333
+    depends_on:
+      - dragonfly
+    networks:
+      - intra-net
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+    networks:
+      - intra-net
+
+  client:
+    container_name: client
+    build:
+      target: prod
+      context: ./client
+    environment:
+      - NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - 3000:3000
+    depends_on:
+      - nginx
+    networks:
+      - intra-net
+
+networks:
+  intra-net:
+    driver: bridge

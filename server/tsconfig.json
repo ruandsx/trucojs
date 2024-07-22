@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "baseUrl": "./src",
+    "outDir": "./dist",
+    "paths": {
+      "@constants/*": ["domain/constants/*"],
+      "@controllers/*": ["domain/controllers/*"],
+      "@entities/*": ["domain/entities/*"],
+      "@enums/*": ["domain/enums/*"],
+      "@interfaces/*": ["domain/interfaces/*"],
+      "@usecases/*": ["domain/usecases/*"],
+      "@infra/*": ["infra/*"]
+    },
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
